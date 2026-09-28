@@ -1,0 +1,11 @@
+{
+  "appId": "com.offerpk.calculator",
+  "appName": "Offer Calculator",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

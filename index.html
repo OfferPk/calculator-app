@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-accent="blue">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="description" content="Offer Calculator — offline scientific calculator. Basic, memory, history, themes. No account required." />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Calculator" />
+  <title>Offer Calculator</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app" role="application" aria-label="Offer Calculator">
+    <header class="topbar">
+      <div class="brand">Offer Calculator</div>
+      <div class="top-meta">
+        <span class="pill" id="mem-indicator" hidden title="Memory set">M</span>
+        <span class="pill" id="angle-indicator" title="Angle mode">DEG</span>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Calculator screens">
+      <button type="button" class="tab-btn active" role="tab" data-tab="basic" aria-selected="true" aria-controls="screen-basic">Basic</button>
+      <button type="button" class="tab-btn" role="tab" data-tab="scientific" aria-selected="false" aria-controls="screen-scientific">Scientific</button>
+      <button type="button" class="tab-btn" role="tab" data-tab="history" aria-selected="false" aria-controls="screen-history">History</button>
+      <button type="button" class="tab-btn" role="tab" data-tab="themes" aria-selected="false" aria-controls="screen-themes">Themes</button>
+      <button type="button" class="tab-btn" role="tab" data-tab="settings" aria-selected="false" aria-controls="screen-settings">Settings</button>
+    </nav>
+
+    <!-- Shared display for Basic + Scientific (never covered by ads) -->
+    <div id="calc-display-wrap" class="calc-display-wrap">
+      <div class="display" aria-live="polite">
+        <div class="expr-line" id="expr-line">0</div>
+        <div class="result-line" id="result-line">0</div>
+        <div class="display-actions">
+          <button type="button" class="icon-btn" data-key="DEG" aria-label="Toggle degree radian mode" id="btn-deg-rad">Deg/Rad</button>
+          <button type="button" class="icon-btn" data-key="paste" aria-label="Paste into expression">Paste</button>
+          <button type="button" class="icon-btn" data-key="copy" aria-label="Copy result">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BASIC -->
+    <section class="screen active" id="screen-basic" data-screen="basic" role="tabpanel" aria-label="Basic calculator">
+      <div class="keypad keypad-basic" role="group" aria-label="Basic keypad">
+        <button type="button" class="key mem" data-key="MC" aria-label="Memory clear">MC</button>
+        <button type="button" class="key mem" data-key="MR" aria-label="Memory recall">MR</button>
+        <button type="button" class="key mem" data-key="M+" aria-label="Memory add">M+</button>
+        <button type="button" class="key mem" data-key="M−" aria-label="Memory subtract">M−</button>
+
+        <button type="button" class="key fn danger" data-key="C" aria-label="Clear all">C</button>
+        <button type="button" class="key fn" data-key="CE" aria-label="Clear entry">CE</button>
+        <button type="button" class="key fn" data-key="back" aria-label="Backspace">⌫</button>
+        <button type="button" class="key op" data-key="÷" aria-label="Divide">÷</button>
+
+        <button type="button" class="key" data-key="7" aria-label="7">7</button>
+        <button type="button" class="key" data-key="8" aria-label="8">8</button>
+        <button type="button" class="key" data-key="9" aria-label="9">9</button>
+        <button type="button" class="key op" data-key="×" aria-label="Multiply">×</button>
+
+        <button type="button" class="key" data-key="4" aria-label="4">4</button>
+        <button type="button" class="key" data-key="5" aria-label="5">5</button>
+        <button type="button" class="key" data-key="6" aria-label="6">6</button>
+        <button type="button" class="key op" data-key="−" aria-label="Subtract">−</button>
+
+        <button type="button" class="key" data-key="1" aria-label="1">1</button>
+        <button type="button" class="key" data-key="2" aria-label="2">2</button>
+        <button type="button" class="key" data-key="3" aria-label="3">3</button>
+        <button type="button" class="key op" data-key="+" aria-label="Add">+</button>
+
+        <button type="button" class="key fn" data-key="±" aria-label="Toggle sign">±</button>
+        <button type="button" class="key" data-key="0" aria-label="0">0</button>
+        <button type="button" class="key" data-key="." aria-label="Decimal point">.</button>
+        <button type="button" class="key eq" data-key="=" aria-label="Equals">=</button>
+
+        <button type="button" class="key fn" data-key="%" aria-label="Percent">%</button>
+        <button type="button" class="key mem" data-key="MS" aria-label="Memory store">MS</button>
+        <button type="button" class="key fn" data-key="(" aria-label="Open parenthesis">(</button>
+        <button type="button" class="key fn" data-key=")" aria-label="Close parenthesis">)</button>
+      </div>
+    </section>
+
+    <!-- SCIENTIFIC -->
+    <section class="screen" id="screen-scientific" data-screen="scientific" role="tabpanel" aria-label="Scientific calculator" hidden>
+      <div class="keypad keypad-sci" role="group" aria-label="Scientific keypad">
+        <button type="button" class="key fn" data-key="sin" aria-label="Sine">sin</button>
+        <button type="button" class="key fn" data-key="cos" aria-label="Cosine">cos</button>
+        <button type="button" class="key fn" data-key="tan" aria-label="Tangent">tan</button>
+        <button type="button" class="key fn" data-key="(" aria-label="Open parenthesis">(</button>
+        <button type="button" class="key fn" data-key=")" aria-label="Close parenthesis">)</button>
+
+        <button type="button" class="key fn" data-key="asin" aria-label="Arcsine">asin</button>
+        <button type="button" class="key fn" data-key="acos" aria-label="Arccosine">acos</button>
+        <button type="button" class="key fn" data-key="atan" aria-label="Arctangent">atan</button>
+        <button type="button" class="key fn" data-key="√" aria-label="Square root">√</button>
+        <button type="button" class="key fn" data-key="x²" aria-label="Square">x²</button>
+
+        <button type="button" class="key fn" data-key="log" aria-label="Log base 10">log</button>
+        <button type="button" class="key fn" data-key="ln" aria-label="Natural log">ln</button>
+        <button type="button" class="key fn" data-key="x^y" aria-label="Power">x^y</button>
+        <button type="button" class="key fn" data-key="!" aria-label="Factorial">n!</button>
+        <button type="button" class="key fn" data-key="1/x" aria-label="Reciprocal">1/x</button>
+
+        <button type="button" class="key fn" data-key="π" aria-label="Pi">π</button>
+        <button type="button" class="key fn" data-key="e" aria-label="Euler number e">e</button>
+        <button type="button" class="key fn danger" data-key="C" aria-label="Clear all">C</button>
+        <button type="button" class="key fn" data-key="back" aria-label="Backspace">⌫</button>
+        <button type="button" class="key op" data-key="÷" aria-label="Divide">÷</button>
+
+        <button type="button" class="key" data-key="7" aria-label="7">7</button>
+        <button type="button" class="key" data-key="8" aria-label="8">8</button>
+        <button type="button" class="key" data-key="9" aria-label="9">9</button>
+        <button type="button" class="key op" data-key="×" aria-label="Multiply">×</button>
+        <button type="button" class="key mem" data-key="MC" aria-label="Memory clear">MC</button>
+
+        <button type="button" class="key" data-key="4" aria-label="4">4</button>
+        <button type="button" class="key" data-key="5" aria-label="5">5</button>
+        <button type="button" class="key" data-key="6" aria-label="6">6</button>
+        <button type="button" class="key op" data-key="−" aria-label="Subtract">−</button>
+        <button type="button" class="key mem" data-key="MR" aria-label="Memory recall">MR</button>
+
+        <button type="button" class="key" data-key="1" aria-label="1">1</button>
+        <button type="button" class="key" data-key="2" aria-label="2">2</button>
+        <button type="button" class="key" data-key="3" aria-label="3">3</button>
+        <button type="button" class="key op" data-key="+" aria-label="Add">+</button>
+        <button type="button" class="key mem" data-key="M+" aria-label="Memory add">M+</button>
+
+        <button type="button" class="key fn" data-key="±" aria-label="Toggle sign">±</button>
+        <button type="button" class="key" data-key="0" aria-label="0">0</button>
+        <button type="button" class="key" data-key="." aria-label="Decimal point">.</button>
+        <button type="button" class="key eq" data-key="=" aria-label="Equals">=</button>
+        <button type="button" class="key mem" data-key="MS" aria-label="Memory store">MS</button>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="screen" id="screen-history" data-screen="history" role="tabpanel" aria-label="Calculation history" hidden>
+      <div class="history-toolbar">
+        <h2 class="panel-title" style="margin:0">History</h2>
+        <button type="button" class="btn-ghost" id="btn-clear-history" aria-label="Clear history">Clear</button>
+      </div>
+      <p class="empty-hint" style="padding:0;margin:0;font-size:0.85rem;text-align:left">Tap an entry to reuse. Stored locally (max 50).</p>
+      <div id="history-list"></div>
+    </section>
+
+    <!-- THEMES -->
+    <section class="screen" id="screen-themes" data-screen="themes" role="tabpanel" aria-label="Themes" hidden>
+      <div id="themes-panels"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="screen" id="screen-settings" data-screen="settings" role="tabpanel" aria-label="Settings" hidden>
+      <h2 class="panel-title">Settings</h2>
+      <div class="settings-list">
+        <div class="setting-row">
+          <label for="set-angle">Angle mode
+            <span class="hint">Degrees or radians for trig</span>
+          </label>
+          <select id="set-angle" aria-label="Angle mode">
+            <option value="deg">Degrees</option>
+            <option value="rad">Radians</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label for="set-sound">Key sound
+            <span class="hint">Soft click on tap</span>
+          </label>
+          <input type="checkbox" id="set-sound" aria-label="Enable key sound" />
+        </div>
+        <div class="setting-row">
+          <label for="set-haptic">Haptic feedback
+            <span class="hint">Vibrate on supported devices</span>
+          </label>
+          <input type="checkbox" id="set-haptic" aria-label="Enable haptic feedback" />
+        </div>
+        <div class="setting-row">
+          <label for="set-keep-on">Keep screen on
+            <span class="hint">Wake Lock API (stub OK if unsupported)</span>
+          </label>
+          <input type="checkbox" id="set-keep-on" aria-label="Keep screen on" />
+        </div>
+      </div>
+      <div class="settings-links">
+        <a href="privacy.html">Privacy policy</a>
+        <span style="color:var(--text-muted);font-size:0.85rem">Version 1.0.0-complete · Offline · Package com.offerpk.calculator</span>
+      </div>
+    </section>
+  </div>
+
+  <div id="ad-banner" hidden role="complementary" aria-label="Advertisement">
+    <span class="ad-banner-label">Ad banner stub</span>
+  </div>
+
+  <div id="modal-ad-stub" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="ad-stub-title">
+    <div class="modal-card">
+      <h3 class="ad-stub-title" id="ad-stub-title">Rewarded Ad (stub)</h3>
+      <div class="ad-stub-body"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" data-ad-no aria-label="Cancel reward">Cancel</button>
+        <button type="button" class="btn-primary" data-ad-yes aria-label="Grant reward">Grant</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" hidden role="status" aria-live="polite"></div>
+
+  <script src="js/calc.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ads.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
