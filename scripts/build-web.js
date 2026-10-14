@@ -79,6 +79,7 @@ copyWebInto(www);
 console.log('Built www/ for Capacitor');
 
 copyWebInto(docs);
+fs.writeFileSync(path.join(docs, '.nojekyll'), '');
 for (const extra of ['README.md', 'STATUS.md']) {
   const s = path.join(root, extra);
   if (fs.existsSync(s)) fs.copyFileSync(s, path.join(docs, extra));

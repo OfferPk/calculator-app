@@ -25,11 +25,11 @@
     </header>
 
     <nav class="tabs" role="tablist" aria-label="Calculator screens">
-      <button type="button" class="tab-btn active" role="tab" data-tab="basic" aria-selected="true" aria-controls="screen-basic">Basic</button>
-      <button type="button" class="tab-btn" role="tab" data-tab="scientific" aria-selected="false" aria-controls="screen-scientific">Scientific</button>
-      <button type="button" class="tab-btn" role="tab" data-tab="history" aria-selected="false" aria-controls="screen-history">History</button>
-      <button type="button" class="tab-btn" role="tab" data-tab="themes" aria-selected="false" aria-controls="screen-themes">Themes</button>
-      <button type="button" class="tab-btn" role="tab" data-tab="settings" aria-selected="false" aria-controls="screen-settings">Settings</button>
+      <button type="button" id="tab-basic" class="tab-btn active" role="tab" data-tab="basic" aria-selected="true" aria-controls="screen-basic" tabindex="0">Basic</button>
+      <button type="button" id="tab-scientific" class="tab-btn" role="tab" data-tab="scientific" aria-selected="false" aria-controls="screen-scientific" tabindex="-1">Scientific</button>
+      <button type="button" id="tab-history" class="tab-btn" role="tab" data-tab="history" aria-selected="false" aria-controls="screen-history" tabindex="-1">History</button>
+      <button type="button" id="tab-themes" class="tab-btn" role="tab" data-tab="themes" aria-selected="false" aria-controls="screen-themes" tabindex="-1">Themes</button>
+      <button type="button" id="tab-settings" class="tab-btn" role="tab" data-tab="settings" aria-selected="false" aria-controls="screen-settings" tabindex="-1">Settings</button>
     </nav>
 
     <!-- Shared display for Basic + Scientific (never covered by ads) -->
@@ -46,7 +46,7 @@
     </div>
 
     <!-- BASIC -->
-    <section class="screen active" id="screen-basic" data-screen="basic" role="tabpanel" aria-label="Basic calculator">
+    <section class="screen active" id="screen-basic" data-screen="basic" role="tabpanel" aria-labelledby="tab-basic">
       <div class="keypad keypad-basic" role="group" aria-label="Basic keypad">
         <button type="button" class="key mem" data-key="MC" aria-label="Memory clear">MC</button>
         <button type="button" class="key mem" data-key="MR" aria-label="Memory recall">MR</button>
@@ -86,7 +86,7 @@
     </section>
 
     <!-- SCIENTIFIC -->
-    <section class="screen" id="screen-scientific" data-screen="scientific" role="tabpanel" aria-label="Scientific calculator" hidden>
+    <section class="screen" id="screen-scientific" data-screen="scientific" role="tabpanel" aria-labelledby="tab-scientific" hidden>
       <div class="keypad keypad-sci" role="group" aria-label="Scientific keypad">
         <button type="button" class="key fn" data-key="sin" aria-label="Sine">sin</button>
         <button type="button" class="key fn" data-key="cos" aria-label="Cosine">cos</button>
@@ -139,7 +139,7 @@
     </section>
 
     <!-- HISTORY -->
-    <section class="screen" id="screen-history" data-screen="history" role="tabpanel" aria-label="Calculation history" hidden>
+    <section class="screen" id="screen-history" data-screen="history" role="tabpanel" aria-labelledby="tab-history" hidden>
       <div class="history-toolbar">
         <h2 class="panel-title" style="margin:0">History</h2>
         <button type="button" class="btn-ghost" id="btn-clear-history" aria-label="Clear history">Clear</button>
@@ -149,12 +149,12 @@
     </section>
 
     <!-- THEMES -->
-    <section class="screen" id="screen-themes" data-screen="themes" role="tabpanel" aria-label="Themes" hidden>
+    <section class="screen" id="screen-themes" data-screen="themes" role="tabpanel" aria-labelledby="tab-themes" hidden>
       <div id="themes-panels"></div>
     </section>
 
     <!-- SETTINGS -->
-    <section class="screen" id="screen-settings" data-screen="settings" role="tabpanel" aria-label="Settings" hidden>
+    <section class="screen" id="screen-settings" data-screen="settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
       <h2 class="panel-title">Settings</h2>
       <div class="settings-list">
         <div class="setting-row">
