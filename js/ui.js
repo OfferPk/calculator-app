@@ -309,6 +309,7 @@
     $$('.tab-btn').forEach((b) => {
       b.classList.toggle('active', b.dataset.tab === name);
       b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false');
+      b.tabIndex = b.dataset.tab === name ? 0 : -1;
     });
     CalcStorage.set({ lastTab: name });
 
@@ -331,8 +332,21 @@
     const list = $('#history-list');
     if (!list) return;
     const hist = state().history || [];
+    const clearButton = $('#btn-clear-history');
+    if (clearButton) clearButton.disabled = hist.length === 0;
     if (!hist.length) {
-      list.innerHTML = '<p class="empty-hint">No history yet. Calculate something!</p>';
+      list.innerHTML = `<section class="empty-state" aria-labelledby="history-empty-title">
+        <span class="empty-state-icon" aria-hidden="true">∑</span>
+        <h3 id="history-empty-title">No calculations yet</h3>
+        <p>Finish a calculation and it will appear here for quick reuse.</p>
+        <button type="button" class="btn-primary" data-open-calculator>Open calculator</button>
+      </section>`;
+      const openCalculator = $('[data-open-calculator]', list);
+      if (openCalculator) openCalculator.addEventListener('click', () => {
+        showScreen('basic');
+        const basicTab = $('.tab-btn[data-tab="basic"]');
+        if (basicTab) basicTab.focus();
+      });
       return;
     }
     list.innerHTML = hist
@@ -395,20 +409,20 @@
     const s = state();
     const unlocked = !!s.premiumThemes;
 
-    let html = '<h2 class="panel-title">Theme</h2><div class="theme-grid">';
+    let html = '<h2 class="panel-title" id="theme-heading">Theme</h2><div class="theme-grid" role="group" aria-labelledby="theme-heading">';
     THEMES.forEach((t) => {
       const locked = t.premium && !unlocked;
       html += `<button type="button" class="theme-card ${s.theme === t.id ? 'selected' : ''} ${locked ? 'locked' : ''}"
-        data-theme="${t.id}" ${locked ? 'data-locked="1"' : ''} aria-label="Theme ${t.label}${locked ? ' (premium)' : ''}">
+        data-theme="${t.id}" ${locked ? 'data-locked="1"' : ''} aria-label="Theme ${t.label}${locked ? ' (premium)' : ''}" aria-pressed="${s.theme === t.id}">
         <span class="swatch theme-${t.id}"></span>
         <span>${t.label}${locked ? ' 🔒' : ''}</span>
       </button>`;
     });
-    html += '</div><h2 class="panel-title">Accent</h2><div class="theme-grid">';
+    html += '</div><h2 class="panel-title" id="accent-heading">Accent</h2><div class="theme-grid" role="group" aria-labelledby="accent-heading">';
     ACCENTS.forEach((a) => {
       const locked = a.premium && !unlocked;
       html += `<button type="button" class="theme-card ${s.accent === a.id ? 'selected' : ''} ${locked ? 'locked' : ''}"
-        data-accent="${a.id}" ${locked ? 'data-locked="1"' : ''} aria-label="Accent ${a.label}${locked ? ' (premium)' : ''}">
+        data-accent="${a.id}" ${locked ? 'data-locked="1"' : ''} aria-label="Accent ${a.label}${locked ? ' (premium)' : ''}" aria-pressed="${s.accent === a.id}">
         <span class="swatch accent-${a.id}"></span>
         <span>${a.label}${locked ? ' 🔒' : ''}</span>
       </button>`;
@@ -547,8 +561,20 @@
   }
 
   function bindChrome() {
-    $$('.tab-btn').forEach((b) => {
+    const tabs = $$('.tab-btn');
+    tabs.forEach((b, index) => {
       b.addEventListener('click', () => showScreen(b.dataset.tab));
+      b.addEventListener('keydown', (e) => {
+        let nextIndex;
+        if (e.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'Home') nextIndex = 0;
+        else if (e.key === 'End') nextIndex = tabs.length - 1;
+        else return;
+        e.preventDefault();
+        tabs[nextIndex].focus();
+        showScreen(tabs[nextIndex].dataset.tab);
+      });
     });
     const clearHist = $('#btn-clear-history');
     if (clearHist) clearHist.addEventListener('click', clearHistoryUI);
